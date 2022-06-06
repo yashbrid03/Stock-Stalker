@@ -1,6 +1,11 @@
 # Get live prices of stock from Yahoo Finance
 from bs4 import BeautifulSoup
 import requests
+import datetime
+
+now = datetime.datetime.now()
+today9am = now.replace(hour=9, minute=0, second=0, microsecond=0)
+today4pm = now.replace(hour=16, minute=0, second=0, microsecond=0)
 
 while True:
     # get the URL of the page
@@ -27,3 +32,8 @@ while True:
         'fin-streamer', {'class': 'Fw(500) Pstart(8px) Fz(24px)'})[1].text
 
     print(price+" "+diff+" "+percent)
+
+    # if time is not between 9am and 4pm then market is closed so exit
+    # else market is open and continue to get the live price
+    if now < today9am or now > today4pm:
+        break
