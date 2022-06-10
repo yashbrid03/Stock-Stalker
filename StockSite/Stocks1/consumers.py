@@ -18,7 +18,7 @@ class WSConsumer(AsyncWebsocketConsumer):
         now = datetime.datetime.now()
         today9am = now.replace(hour=9, minute=0, second=0, microsecond=0)
         today4pm = now.replace(hour=16, minute=0, second=0, microsecond=0)
-        url1 = 'https://finance.yahoo.com/quote/%5EBSESN?p=%5EBSESN&.tsrc=fin-srch'
+        url1 = 'https://finance.yahoo.com/quote/%5EIXIC?p=%5EIXIC&.tsrc=fin-srch'
         url2 = 'https://finance.yahoo.com/quote/%5ENSEI?p=%5ENSEI&.tsrc=fin-srch'
         url3 = 'https://finance.yahoo.com/quote/%5ENSEBANK?p=%5ENSEBANK&.tsrc=fin-srch'
         while True:
@@ -76,8 +76,8 @@ class WSConsumer(AsyncWebsocketConsumer):
                     'percent3': percent3,
                 }
             )
-            if now < today9am or now > today4pm:
-                break
+            # if now < today9am or now > today4pm:
+            #   break
             #print(price, diff, percent)
             # await self.send(json.dumps(
             #    {'price': price, 'diff': diff, 'percent': percent}))
