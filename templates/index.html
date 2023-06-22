@@ -1,0 +1,184 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com/3.0.24"></script>
+    <link rel="stylesheet" href="{% static 'styles/style.css' %}">
+    <title>Stocks Stalker</title>
+</head>
+    <body class="bg-slate-900">
+
+        <form class="md:px-10 px-5 pt-10" action="{% url 'stock' %}" method="post">   
+            {% csrf_token %}
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                <input type="search" list="symbol" id="default-search" name="default-search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Mockups, Logos..." required>
+                <datalist id="symbol">
+                    {% for i in ticker %}
+                        <option value="{{i}}"></option>
+                    {% endfor %}
+                </datalist>
+                <button type="submit" class="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ">Search</button>
+            </div>
+        </form>
+
+        <div class="md:px-10 px-5   pt-10" >            
+            <h1 class="text-white md:text-5xl text-3xl">Market Today</h1>
+            <h2 class="pt-4 text-white md:text-4xl text-2xl">Index</h2>
+            <div class="pb-6 grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-10">
+                <div class="bg-slate-700 text-slate-200 rounded-lg px-5 py-5">
+                    <p class="md:text-2xl text-lg">SENSEX</p><ele class="inline-block" id="sensexprice">{{price1}}</ele>
+                    <p id = "sensexdata" class="text-emerald-600 inline"> {{diff1}}   {{percent1}}</p>
+                </div>
+                <div class="bg-slate-700 text-slate-200 rounded-lg px-5 py-5">
+                    <p class="md:text-2xl text-lg">NIFTY 50</p><ele class="inline-block" id="nifty50price">{{price2}}</ele>
+                    <p id = "nifty50data" class="text-emerald-600 inline">{{diff2}} {{percent2}}</p>
+                </div>
+                <div class="bg-slate-700 text-slate-200 rounded-lg px-5 py-5">
+                    <p class="md:text-2xl text-lg">NIFTY BANK</p><ele class="inline-block" id="niftybankprice">{{price3}}</ele>
+                    <p id = "niftybankdata" class="text-emerald-600 inline">{{diff3}} {{percent3}}</p>
+                </div>
+                <div class="bg-slate-700 text-slate-200 rounded-lg px-5 py-5">
+                    <p class="md:text-2xl text-lg">NIFTY IT</p><ele class="inline-block" id="niftyitprice">{{price4}}</ele>
+                    <p id = "niftyitdata" class="text-emerald-600 inline">{{diff4}} {{percent4}}</p>
+                </div>
+            </div>
+            <div class="flex justify-between items-center">
+                <h2 class="pt-4 text-white md:text-4xl text-2xl pb-2">Top Gainers</h2>
+                <a href="#" class=" pt-4 text-white md:text-l text-l items-center">View All</a>
+            </div>
+            <div class="pb-6 grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-10" id="tg">
+                <div class="bg-slate-700 text-slate-200 rounded-lg px-5 py-5">
+                    <p class="md:text-xl text-lg tg1name"></p><ele class="inline-block" id="tg1price">{{price1}}</ele>
+                    <p id = "tg1data" class="text-emerald-600 inline"> {{diff1}}   {{percent1}}</p>
+                </div>
+                <div class="bg-slate-700 text-slate-200 rounded-lg px-5 py-5">
+                    <p class="md:text-xl text-lg tg2name"></p><ele class="inline-block" id="tg2price">{{price2}}</ele>
+                    <p id = "tg2data" class="text-emerald-600 inline">{{diff2}} {{percent2}}</p>
+                </div>
+                <div class="bg-slate-700 text-slate-200 rounded-lg px-5 py-5">
+                    <p class="md:text-2xl text-lg tg3name"></p><ele class="inline-block" id="tg3price">{{price3}}</ele>
+                    <p id = "tg3data" class="text-emerald-600 inline">{{diff3}} {{percent3}}</p>
+                </div>
+                <div class="bg-slate-700 text-slate-200 rounded-lg px-5 py-5">
+                    <p class="md:text-2xl text-lg tg4name"></p><ele class="inline-block" id="tg4price">{{price4}}</ele>
+                    <p id = "tg4data" class="text-emerald-600 inline">{{diff4}} {{percent4}}</p>
+                </div>
+            </div>
+            <div class="flex justify-between items-center">
+            <h2 class="pt-4 text-white md:text-4xl text-2xl pb-2">Top Losers</h2>
+            <a href="#" class=" pt-4 text-white md:text-l text-l items-center">View All</a>
+        </div>
+            <div class="pb-6 grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-10" id="tl">
+                <div class="bg-slate-700 text-slate-200 rounded-lg px-5 py-5">
+                    <p class="md:text-xl text-lg tl1name"></p><ele class="inline-block mt-1" id="tl1price">{{price1}}</ele>
+                    <p id = "tl1data" class="text-emerald-600 inline "> {{diff1}}   {{percent1}}</p>
+                </div>
+                <div class="bg-slate-700 text-slate-200 rounded-lg px-5 py-5">
+                    <p class="md:text-xl text-lg tl2name"></p><ele class="inline-block mt-1" id="tl2price">{{price2}}</ele>
+                    <p id = "tl2data" class="text-emerald-600 inline">{{diff2}} {{percent2}}</p>
+                </div>
+                <div class="bg-slate-700 text-slate-200 rounded-lg px-5 py-5">
+                    <p class="md:text-xl text-lg tl3name"></p><ele class="inline-block mt-1" id="tl3price">{{price3}}</ele>
+                    <p id = "tl3data" class="text-emerald-600 inline">{{diff3}} {{percent3}}</p>
+                </div>
+                <div class="bg-slate-700 text-slate-200 rounded-lg px-5 py-5">
+                    <p class="md:text-xl text-lg tl4name"></p><ele class="inline-block mt-1" id="tl4price">{{price4}}</ele>
+                    <p id = "tl4data" class="text-emerald-600 inline">{{diff4}} {{percent4}}</p>
+                </div>
+            </div>
+            
+            
+            
+            
+        </div>
+          
+    </body>
+    <script>
+        
+        
+        var socket = new WebSocket("ws://localhost:8000/ws/index/");
+        socket.onopen = function (e){
+            console.log("hello")
+        }
+        socket.onmessage = function(e) {
+            var data = JSON.parse(e.data);
+            console.log(data.price2);
+            document.querySelector('#sensexprice').innerText = data.price1;
+            document.querySelector('#sensexdata').innerText =data.diff1+" "+data.percent1;
+            if(data.diff1>0){
+                document.querySelector('#sensexdata').classList.add("text-emerald-600");
+            }
+            else{
+                document.querySelector('#sensexdata').classList.add("text-red-600");
+            }
+            document.querySelector('#nifty50price').innerText = data.price2;
+            document.querySelector('#nifty50data').innerText = data.diff2+" "+data.percent2;
+            if(data.diff2>0){
+                document.querySelector('#nifty50data').classList.add("text-emerald-600");
+            }
+            else{
+                document.querySelector('#nifty50data').classList.add("text-red-600");
+            }
+            document.querySelector('#niftybankprice').innerText = data.price3;
+            document.querySelector('#niftybankdata').innerText = data.diff3+" "+data.percent3;
+            if(data.diff3>0){
+                document.querySelector('#niftybankdata').classList.add("text-emerald-600");
+            }
+            else{
+                document.querySelector('#niftybankdata').classList.add("text-red-600");
+            }
+            document.querySelector('#niftyitprice').innerText = data.price4;
+            document.querySelector('#niftyitdata').innerText = data.diff4+" "+data.percent4;
+            if(data.diff4>0){
+                document.querySelector('#niftyitdata').classList.add("text-emerald-600");
+            }
+            else{
+                document.querySelector('#niftyitdata').classList.add("text-red-600");
+            }
+        };
+
+        var sockettg = new WebSocket("ws://localhost:8000/ws/top_gainers/");
+        sockettg.onmessage = function(e) {
+            var data = JSON.parse(e.data);
+            const listname = ['tg1name','tg2name','tg3name','tg4name']
+            const listprice = ['tg1price','tg2price','tg3price','tg4price']
+            const listdata = ['tg1data','tg2data','tg3data','tg4data']
+
+            for(var i = 0; i <4; i++){
+                // console.log(data)
+                document.querySelector('.'+listname[i]).innerText = data['data'][i];
+                document.querySelector('#'+listprice[i]).innerText = "₹ "+data['price'][i];
+                document.querySelector('#'+listdata[i]).innerText = "+"+data['diff'][i];
+                
+                document.querySelector('#'+listdata[i]).classList.add("text-emerald-600");
+            }
+        
+            // console.log(data);
+        };
+
+        var sockettl = new WebSocket("ws://localhost:8000/ws/top_losers/");
+        sockettl.onmessage = function(e) {
+            var data = JSON.parse(e.data);
+            const listname = ['tl1name','tl2name','tl3name','tl4name']
+            const listprice = ['tl1price','tl2price','tl3price','tl4price']
+            const listdata = ['tl1data','tl2data','tl3data','tl4data']
+
+            for(var i = 0; i <4; i++){
+                // console.log(data)
+                document.querySelector('.'+listname[i]).innerText = data['data'][i];
+                document.querySelector('#'+listprice[i]).innerText = "₹ "+data['price'][i];
+                document.querySelector('#'+listdata[i]).innerText = data['diff'][i];
+                
+                document.querySelector('#'+listdata[i]).classList.add("text-red-600");
+            }
+        
+            // console.log(data);
+        };
+    </script>
+</html>

@@ -1,0 +1,402 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <script src="https://cdn.tailwindcss.com/3.0.24"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
+    
+    <title>Document</title>
+</head>
+<body  class="bg-slate-900">
+    <div class="md:px-10 px-5   pt-10" >
+        <div class="bg-slate-800 text-slate-200 shadow-[rgba(0,_0,_0,_0.5)_0px_3px_8px] rounded-lg px-5 py-5">
+            <h1 class="md:text-4xl text-2xl font-medium text-lime-300">{{ name }}</h1>
+            <a class="text-indigo-500 inline-flex items-center text-lg sm:text-xl mt-3 font-medium" href={{website}}>
+                <svg class="h-7 w-7 mr-1 text-indigo-500 "  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
+                  </svg> 
+                  Website
+              </a>
+              <a class=" inline-flex items-center ml-5 text-lg sm:text-xl mt-3 font-medium" href='https://www.nseindia.com/get-quotes/equity?symbol={{ticker}}'>
+                <svg class="h-7 w-7 mr-1 text-indigo-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />  <path d="M7 12h14l-3 -3m0 6l3 -3" /></svg>
+                  NSE : {{ticker}}
+              </a>
+              <a class=" inline-flex ml-5 items-center text-lg sm:text-xl mt-3 font-medium" >
+                <svg class="h-7 w-7 mr-1 text-indigo-500"  width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">  <path stroke="none" d="M0 0h24v24H0z"/>  <rect x="3" y="7" width="18" height="13" rx="2" />  <path d="M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2" />  <line x1="12" y1="12" x2="12" y2="12.01" />  <path d="M3 13a20 20 0 0 0 18 0" /></svg>
+                  Industry : {{industry}}
+              </a>
+            <div class="flex flex-wrap -m-4 mt-4">
+                <div class="xl:w-2/3 md:w-full p-4">
+                    <div class="border border-gray-200 p-6 rounded-lg">
+                        <div class=" flex flex-wrap -m-4">
+                            <div class="group hover:bg-lime-300 hover:text-black  rounded-lg xl:w-1/3 md:w-1/2 p-4 xl:w-1/3 md:w-1/2 p-4 ">
+                                <div class=" p-6 ">
+                                    <div class="  flex flex-wrap items-center -m-4">
+                                        <div class="xl:w-1/2 md:w-1/2 p-2">
+                                            <div class="text-lg text-slate-400 group-hover:text-black rounded-lg">
+                                                Market Cap
+                                            </div>
+                                        </div>
+                                        <div class="xl:w-1/2 md:w-1/2 p-2">
+                                            <div class="text-right font-bold rounded-lg">
+                                                {{marketcap}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="group hover:bg-lime-300 hover:text-black  rounded-lg xl:w-1/3 md:w-1/2 p-4 xl:w-1/3 md:w-1/2 p-4 ">
+                                <div class=" p-6 ">
+                                    <div class="flex flex-wrap items-center -m-4">
+                                        <div class="xl:w-1/2 md:w-1/2 p-2">
+                                            <div class="text-lg text-slate-400 group-hover:text-black rounded-lg">
+                                                ROE
+                                            </div>
+                                        </div>
+                                        <div class="xl:w-1/2 md:w-1/2 p-2">
+                                            <div class="text-right font-bold rounded-lg">
+                                                {{roe}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="group hover:bg-lime-300 hover:text-black  rounded-lg  p-4 xl:w-1/3 md:w-1/2  max-w-sm:pt-0">
+                                <div class=" p-6 ">
+                                    <div class="flex flex-wrap items-center -m-4">
+                                        <div class="xl:w-1/2 md:w-1/2 p-2">
+                                            <div class="text-lg text-slate-400 group-hover:text-black rounded-lg">
+                                                Book Value
+                                            </div>
+                                        </div>
+                                        <div class="xl:w-1/2 md:w-1/2 p-2">
+                                            <div class="text-right font-bold rounded-lg">
+                                                {{bookvalue}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="group hover:bg-lime-300 hover:text-black  rounded-lg xl:w-1/3 md:w-1/2 p-4 pt-0">
+                                <div class=" p-6">
+                                    <div class="flex flex-wrap max-w-sm:items-center -m-4">
+                                        <div class="xl:w-1/2 md:w-1/2 p-2">
+                                            <div class="text-lg text-slate-400 group-hover:text-black rounded-lg">
+                                                Dividend Yield
+                                            </div>
+                                        </div>
+                                        <div class="xl:w-1/2 md:w-1/2 p-2">
+                                            <div class="text-right font-bold rounded-lg">
+                                                {{dividendyield}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="group  hover:bg-lime-300 hover:text-black rounded-lg xl:w-1/3 md:w-1/2 p-4 pt-0">
+                                <div class=" p-6 ">
+                                    <div class="flex flex-wrap max-w-sm:items-center -m-4">
+                                        <div class="xl:w-1/2 md:w-1/2 p-2">
+                                            <div class="text-lg text-slate-400 group-hover:text-black rounded-lg">
+                                                52 Week High
+                                            </div>
+                                        </div>
+                                        <div class="xl:w-1/2 md:w-1/2 p-2">
+                                            <div class="text-right font-bold rounded-lg">
+                                                {{52weekh}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="group  hover:bg-lime-300 hover:text-black rounded-lg xl:w-1/3 md:w-1/2 p-4 pt-0">
+                                <div class=" p-6 ">
+                                    <div class="flex flex-wrap items-center -m-4">
+                                        <div class="xl:w-1/2 md:w-1/2 p-2">
+                                            <div class="text-lg text-slate-400 group-hover:text-black rounded-lg">
+                                                52 Week Low
+                                            </div>
+                                        </div>
+                                        <div class="xl:w-1/2 md:w-1/2 p-2">
+                                            <div class="text-right font-bold rounded-lg">
+                                                {{52weekl}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="group hover:bg-lime-300 hover:text-black  rounded-lg xl:w-1/3 md:w-1/2 p-4 pt-0">
+                                <div class=" p-6">
+                                    <div class="flex flex-wrap items-center -m-4">
+                                        <div class="xl:w-1/2 md:w-1/2 p-2">
+                                            <div class="text-lg text-slate-400 group-hover:text-black rounded-lg">
+                                                Total Cash
+                                            </div>
+                                        </div>
+                                        <div class="xl:w-1/2 md:w-1/2 p-2">
+                                            <div class="text-right font-bold rounded-lg">
+                                                {{totalCash}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="group hover:bg-lime-300 hover:text-black rounded-lg xl:w-1/3 md:w-1/2 p-4 pt-0">
+                                <div class=" p-6 rounded-lg">
+                                    <div class=" flex flex-wrap items-center -m-4">
+                                        <div class="xl:w-1/2 md:w-1/2 p-2">
+                                            <div class="text-lg text-slate-400 group-hover:text-black rounded-lg">
+                                                Total Debt
+                                            </div>
+                                        </div>
+                                        <div class="xl:w-1/2 md:w-1/2 p-2">
+                                            <div class="text-right font-bold rounded-lg">
+                                                {{totalDebt}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="group  hover:bg-lime-300 hover:text-black rounded-lg xl:w-1/3 md:w-1/2 p-4 pt-0">
+                                <div class=" p-6 ">
+                                    <div class="flex flex-wrap items-center -m-4">
+                                        <div class="xl:w-1/2 md:w-1/2 p-2">
+                                            <div class="text-lg text-slate-400 group-hover:text-black rounded-lg">
+                                                Total Revenue
+                                            </div>
+                                        </div>
+                                        <div class="xl:w-1/2 md:w-1/2 p-2">
+                                            <div class="text-right font-bold rounded-lg">
+                                                {{totalRevenue}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+                <div class="xl:w-1/3 md:w-full p-4">
+                    <h2 class="md:text-3xl text-2xl text-lime-300 font-medium mb-2">Summary</h3>
+                        <p class="text-lg text-slate-300">{{short_summary}}
+                            <span id="dots">...</span>
+                            <span id="more" class="hidden">{{remain_summary}}</span>
+                            <button onclick="toggleText()" id="button"
+                        class="text-indigo-500 inline-flex items-center ">READ MORE</button>
+                        </p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-slate-800 text-slate-200 rounded-lg px-10 py-5 pb-10  mt-8">
+            <h1 class="md:text-4xl text-2xl font-medium mb-2 text-lime-300">6 months Actual Close</h1>
+            <div class="g1-1 px-10 " style=" height:500px ">
+                <canvas id="chart1"   ></canvas>
+            </div>
+            
+        </div>
+        <div class="bg-slate-700 text-slate-200 rounded-lg   px-10 py-5 pb-10 mt-8">
+            <h1 class="md:text-4xl text-2xl font-medium mb-2">Trend Plot</h1>
+            <div class="g1-1 px-10" style="height: 500px; ">
+                <canvas id="chart2"   ></canvas>
+            </div>
+            
+        </div>
+        {{df}}
+        <!-- <canvas id="chart2" ></canvas> -->
+    </div>
+    
+    <script>
+        function toggleText() {
+            var dots = document.getElementById("dots");
+            var moreText = document.getElementById("more");
+            var button = document.getElementById("button");
+
+            if (dots.classList.contains("hidden")) {
+                // Show the dots
+                dots.classList.remove("hidden");
+
+                // Hide the more text
+                moreText.classList.add("hidden");
+
+                // change text of the button
+                button.innerHTML = "Read more";
+            } else {
+                // Hide the dots
+                dots.classList.add("hidden");
+
+                // hide the more text
+                moreText.classList.remove("hidden");
+
+                // change text of the button
+                button.innerHTML = "Read less";
+            }
+        }
+
+        // websocket
+        let val = "stock"
+        const stockSocket = new WebSocket(
+            
+    "ws://localhost:8000/ws/stockprice/"+val+"?symbol={{ticker}}"
+  );
+
+  stockSocket.onmessage = function(e) {
+            var data = JSON.parse(e.data);
+            console.log(data)
+  }
+
+  var socket = new WebSocket("ws://localhost:8000/ws/index/");
+
+        var actualclose = {{closedata}}
+        var label1 = {{labelstrend|safe}}
+        var trend = {{trenddata|safe}}
+        var SMA = {{SMA|safe}}
+        var EMA = {{EMA|safe}}
+        var CMA = {{CMA|safe}}
+        var colortrend = {{colortrend|safe}}
+
+        Chart.defaults.color = "#ffffff";
+
+        
+        let ctx = document.getElementById("chart1").getContext("2d");
+        let chart = new Chart(ctx, {
+  type: "line",
+  data: {
+   labels: label1,
+   datasets: [
+    {
+      label: "Actual Close",
+      backgroundColor: "#79AEC8",
+      borderColor: "#417690",
+      data: actualclose,
+      cubicInterpolationMode: 'monotone',
+      pointRadius:0,
+      tension: 0.4
+    },{
+      label: "20D SMA",
+      borderColor: '#a4a803',
+      backgroundColor: '#e8eb5b',
+      data: SMA,
+      pointRadius:0,
+      cubicInterpolationMode: 'monotone',
+      tension: 0.4
+    },
+    {
+      label: "CMA",
+      borderColor: '#042cb0',
+      backgroundColor: '#5078fa',
+      data: CMA,
+      pointRadius:0,
+      cubicInterpolationMode: 'monotone',
+      tension: 0.4
+    },
+    {
+      label: "20D EMA",
+      borderColor: '#a103a1',
+      backgroundColor: '#fa69fa',
+      data: EMA,
+      pointRadius:0,
+      cubicInterpolationMode: 'monotone',
+      tension: 0.4
+    }
+   ]
+    
+  },
+  options: {
+    maintainAspectRatio: false,
+    scales: {
+    x: {
+        display: true,
+      ticks: {
+        autoSkip: true,
+        maxTicksLimit: 10,
+      }
+    },
+    y:{
+        display:true,
+    }
+   },
+   plugins: {
+      legend: {
+        position: 'right',
+        labels:{
+            defaultFontColor: "#FFF"
+        }
+      },
+      title: {
+        display: false,
+      }
+    },
+    interaction: {
+        mode: 'index',
+      intersect: false,
+    },
+   
+   
+  }
+});
+
+        let ctx2 = document.getElementById("chart2").getContext("2d");
+let chart2 = new Chart(ctx2, {
+  type: "line",
+  data: {
+   labels: label1,
+   datasets: [
+    {
+      label: "Actual Close",
+      backgroundColor: "#79AEC8",
+      borderColor: "#417690",
+      data: actualclose,
+    },
+    {
+        // type:"bar",
+      label: "Trend",
+      borderColor: colortrend[0],
+      backgroundColor: colortrend[1],
+      data: trend,
+      pointRadius:0,
+    }
+   ]
+    
+  },
+  options: {
+    scales: {
+    x: {
+      ticks: {
+        autoSkip: true,
+        maxTicksLimit: 10,
+      }
+    }
+   },
+   plugins: {
+      legend: {
+        position: 'right',
+        labels:{
+            defaultFontColor: "#FFF"
+        }
+      },
+      title: {
+        display: true,
+        text: 'Trend Plot'
+      }
+    }
+   
+   
+  }
+});
+
+
+
+
+// Chart.defaults.global.defaultFontColor = "white";
+    
+    </script>
+</body>
+</html>
