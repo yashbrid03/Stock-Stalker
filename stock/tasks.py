@@ -1,20 +1,34 @@
-import json
+
 from celery import shared_task
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 import requests
 from bs4 import BeautifulSoup
-import asyncio
-from realtime.celery import app
 
 channel_layer = get_channel_layer()
-is_connected = True
 
 @shared_task()
-def task1(arg1):
-    print(arg1)
+def get_live_price(arg1 , arg2):
+    url = 'https://finance.yahoo.com/quote/'+arg1+'.NS'
+    page = requests.get(url, headers={
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36",
+    })
+    soup = BeautifulSoup(page.text, 'html.parser')
+    price = soup.find(
+        'fin-streamer', {'class': 'Fw(b) Fz(36px) Mb(-4px) D(ib)'}).text
+    diff = soup.find(
+        'fin-streamer', {'class': 'Fw(500) Pstart(8px) Fz(24px)'}).text
+    percent = soup.find_all(
+        'fin-streamer', {'class': 'Fw(500) Pstart(8px) Fz(24px)'})[1].find('span').text
+    
+    context = {
+        'price': price,
+        'diff': diff,
+        'percent': percent,
+    }
+    
     async_to_sync(channel_layer.group_send)(
-        'stock_stock', {'type': 'send_data', 'context': arg1})
+        'stock_stock', {'type': 'send_data', 'context': context})
     # async_to_sync(channel_layer.group_send)(
     #     arg2, {'type': 'send_data', 'context': arg1})
     
@@ -36,7 +50,7 @@ def task1(arg1):
 #     is_connected = False
 
 @shared_task
-def get_index_data():
+def get_index_data(arg1):
     # SENSEX DATA
     url1 = 'https://finance.yahoo.com/quote/%5EBSESN?p=%5EBSESN'
     page1 = requests.get(url1, headers={
@@ -103,12 +117,14 @@ def get_index_data():
         'diff4': diff4,
         'percent4': percent4,
     }
-    async_to_sync(channel_layer.group_send)(
-        'index_data', {'type': 'send_data', 'context': context})
+
+    async_to_sync(channel_layer.group_send)('index_data', {'type':'send_data', 'context':context})
+    # async_to_sync(channel_layer.group_send)(
+    #     'index_data', {'type': 'send_data', 'context': context})
 
 
 @shared_task
-def get_top_gainers():
+def get_top_gainers(arg1):
 
     url = 'https://groww.in/v1/api/stocks_data/explore/v2/indices/GIDXNIFTY100/market_trends?discovery_filter_types=TOP_GAINERS&size=4'
     headers = {
@@ -152,12 +168,13 @@ def get_top_gainers():
     else:
         print("Request failed with status code:", response.status_code)
     
-    async_to_sync(channel_layer.group_send)(
-        'top_gainers_data', {'type': 'send_tg_data', 'context': context})
+    async_to_sync(channel_layer.group_send)('top_gainers_data', {'type':'send_tg_data','context':context})
+    # async_to_sync(channel_layer.group_send)(
+        # 'top_gainers_data', {'type': 'send_tg_data', 'context': context})
 
 
 @shared_task
-def get_top_losers():
+def get_top_losers(arg1):
 
     url = 'https://groww.in/v1/api/stocks_data/explore/v2/indices/GIDXNIFTY100/market_trends?discovery_filter_types=TOP_LOSERS&size=4'
     headers = {
@@ -201,5 +218,6 @@ def get_top_losers():
     else:
         print("Request failed with status code:", response.status_code)
 
-    async_to_sync(channel_layer.group_send)(
-        'top_losers_data', {'type': 'send_tl_data', 'context': context})
+    async_to_sync(channel_layer.group_send)('top_losers_data',{'type':'send_tl_data','context':context})
+    # async_to_sync(channel_layer.group_send)(
+    #     'top_losers_data', {'type': 'send_tl_data', 'context': context})

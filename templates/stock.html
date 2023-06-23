@@ -15,7 +15,12 @@
 <body  class="bg-slate-900">
     <div class="md:px-10 px-5   pt-10" >
         <div class="bg-slate-800 text-slate-200 shadow-[rgba(0,_0,_0,_0.5)_0px_3px_8px] rounded-lg px-5 py-5">
-            <h1 class="md:text-4xl text-2xl font-medium text-lime-300">{{ name }}</h1>
+            <div >
+                
+            <h1 class="md:text-4xl text-2xl font-medium text-lime-300 inline">{{ name }}</h1>
+            <h2 class="md:text-3xl text-xl ml-4 font-medium inline animate-pulse bg-slate-200 rounded" id="price">500</h2>
+            <h3 class="md:text-xl text-lg ml-4 font-small inline animate-pulse bg-slate-200 rounded" id="percent"> (+1)</h3>
+        </div>
             <a class="text-indigo-500 inline-flex items-center text-lg sm:text-xl mt-3 font-medium" href={{website}}>
                 <svg class="h-7 w-7 mr-1 text-indigo-500 "  fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"/>
@@ -247,12 +252,29 @@
     "ws://localhost:8000/ws/stockprice/"+val+"?symbol={{ticker}}"
   );
 
+  var count = 1
   stockSocket.onmessage = function(e) {
             var data = JSON.parse(e.data);
             console.log(data)
+            document.querySelector('#price').innerText = "₹ "+data.price;
+            document.querySelector('#percent').innerText = data.percent;
+            if(count == 1){
+            document.querySelector('#price').classList.remove('animate-pulse')
+            document.querySelector('#price').classList.remove('bg-slate-200')
+            document.querySelector('#percent').classList.remove('animate-pulse')
+            document.querySelector('#percent').classList.remove('bg-slate-200')
+            count = count - 1
+        }
+            if(data.diff>0){
+                document.querySelector('#percent').classList.add("text-emerald-600");
+            }
+            else{
+                document.querySelector('#percent').classList.add("text-red-600");
+            }
+
   }
 
-  var socket = new WebSocket("ws://localhost:8000/ws/index/");
+//   var socket = new WebSocket("ws://localhost:8000/ws/index/");
 
         var actualclose = {{closedata}}
         var label1 = {{labelstrend|safe}}

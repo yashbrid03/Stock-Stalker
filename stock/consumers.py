@@ -3,23 +3,60 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 from urllib.parse import parse_qs
 # from .tasks import update_task_schedule
-
+from django_celery_beat.models import PeriodicTask, IntervalSchedule
+from asgiref.sync import sync_to_async
 
 class IndexConsumer(AsyncWebsocketConsumer):
+    @sync_to_async
+    def addToCeleryBeat(self):
+        task = PeriodicTask.objects.filter(name='get_index_data')
+        if task:
+            task = task.first()
+            arg = json.loads(task.args)
+            print(arg)
+            count = int(arg[0])
+            count += 1
+            task.args = json.dumps([str(count)])
+            task.save()
+        else:
+            # Create new task
+            schedule, created = IntervalSchedule.objects.get_or_create(every=4, period=IntervalSchedule.SECONDS)
+            task = PeriodicTask.objects.create(
+                interval=schedule,
+                name='get_index_data',
+                task='stock.tasks.get_index_data',  # Update the path to your dynamic_task function
+                args=json.dumps(["1"])
+            )
+
     async def connect(self):
-        self.room_name = 'index'
+        # self.room_name = 'index'
         self.room_group_name = 'index_data'
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
         )
+        await self.addToCeleryBeat()
         await self.accept()
 
-    async def disconnect(self):
+    @sync_to_async
+    def decrement_task_count(self):
+        task = PeriodicTask.objects.get(name='get_index_data')
+        if task:
+            arg = json.loads(task.args)
+            count = int(arg[0])
+            count -= 1
+            if count <= 0:
+                task.delete()
+            else:
+                task.args = json.dumps([str(count)])
+                task.save()
+
+    async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
+        await self.decrement_task_count()
         await self.close()
 
     async def send_data(self, event):
@@ -27,20 +64,55 @@ class IndexConsumer(AsyncWebsocketConsumer):
         await self.send(json.dumps(price))
 
 class TopGainersConsumer(AsyncWebsocketConsumer):
+    @sync_to_async
+    def addToCeleryBeat(self):
+        task = PeriodicTask.objects.filter(name='get_top_gainers')
+        if task:
+            task = task.first()
+            arg = json.loads(task.args)
+            print(arg)
+            count = int(arg[0])
+            count += 1
+            task.args = json.dumps([str(count)])
+            task.save()
+        else:
+            # Create new task
+            schedule, created = IntervalSchedule.objects.get_or_create(every=4, period=IntervalSchedule.SECONDS)
+            task = PeriodicTask.objects.create(
+                interval=schedule,
+                name='get_top_gainers',
+                task='stock.tasks.get_top_gainers',  # Update the path to your dynamic_task function
+                args=json.dumps(["1"])
+            )
     async def connect(self):
-        self.room_name = 'top_gainers'
+        # self.room_name = 'top_gainers'
         self.room_group_name = 'top_gainers_data'
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
         )
+        await self.addToCeleryBeat()
         await self.accept()
+
+    @sync_to_async
+    def decrement_task_count(self):
+        task = PeriodicTask.objects.get(name='get_top_gainers')
+        if task:
+            arg = json.loads(task.args)
+            count = int(arg[0])
+            count -= 1
+            if count <= 0:
+                task.delete()
+            else:
+                task.args = json.dumps([str(count)])
+                task.save()
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
+        await self.decrement_task_count()
         await self.close()
 
     async def send_tg_data(self, event):
@@ -49,54 +121,85 @@ class TopGainersConsumer(AsyncWebsocketConsumer):
 
 
 class TopLosersConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
-        self.room_name = 'top_losers'
-        self.room_group_name = 'top_losers_data'
-        await self.channel_layer.group_add(
-            self.room_group_name,
-            self.channel_name
-        )
-        await self.accept()
-
-    async def disconnect(self, close_code):
-        await self.channel_layer.group_discard(
-            self.room_group_name,
-            self.channel_name
-        )
-        await self.close()
-
-    async def send_tl_data(self, event):
-        tl_data = event['context']
-        await self.send(json.dumps(tl_data))
-
-from django_celery_beat.models import PeriodicTask, IntervalSchedule
-from asgiref.sync import sync_to_async, async_to_sync
-class StockPriceConsumer(AsyncWebsocketConsumer):
-
     @sync_to_async
-    def addToCeleryBeat(self, arg1):
-        task = PeriodicTask.objects.filter(name='get_stock_price')
+    def addToCeleryBeat(self):
+        task = PeriodicTask.objects.filter(name='get_top_losers')
         if task:
-            # Update existing task
             task = task.first()
-            args = json.loads(task.args)
-            print(args)
-            args = args[0]
-            print(args)
-            print(arg1)
-            for x in arg1:
-                if x not in args:
-                    args.append(x)
-            task.args = json.dumps([args])
+            arg = json.loads(task.args)
+            print(arg)
+            count = int(arg[0])
+            count += 1
+            task.args = json.dumps([str(count)])
             task.save()
         else:
             # Create new task
             schedule, created = IntervalSchedule.objects.get_or_create(every=4, period=IntervalSchedule.SECONDS)
             task = PeriodicTask.objects.create(
                 interval=schedule,
-                name='get_stock_price',
-                task='stock.tasks.task1',  # Update the path to your dynamic_task function
-                args=json.dumps([arg1])
+                name='get_top_losers',
+                task='stock.tasks.get_top_losers',  # Update the path to your dynamic_task function
+                args=json.dumps(["1"])
+            )
+    async def connect(self):
+        # self.room_name = 'top_losers'
+        self.room_group_name = 'top_losers_data'
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
+        await self.addToCeleryBeat()
+        await self.accept()
+
+    @sync_to_async
+    def decrement_task_count(self):
+        task = PeriodicTask.objects.get(name='get_top_losers')
+        if task:
+            arg = json.loads(task.args)
+            count = int(arg[0])
+            count -= 1
+            if count <= 0:
+                task.delete()
+            else:
+                task.args = json.dumps([str(count)])
+                task.save()
+
+    async def disconnect(self, close_code):
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
+        await self.decrement_task_count()
+        await self.close()
+
+    async def send_tl_data(self, event):
+        tl_data = event['context']
+        await self.send(json.dumps(tl_data))
+
+
+class StockPriceConsumer(AsyncWebsocketConsumer):
+
+    @sync_to_async
+    def addToCeleryBeat(self, arg1):
+        name = 'get_stock_price_'+arg1[0]
+        print("name to add "+name)
+        task = PeriodicTask.objects.filter(name='get_stock_price_'+arg1[0])
+        if task:
+            task = task.first()
+            arg = json.loads(task.args)
+            print(arg)
+            count = int(arg[1])
+            count += 1
+            task.args = json.dumps([arg1[0],str(count)])
+            task.save()
+        else:
+            # Create new task
+            schedule, created = IntervalSchedule.objects.get_or_create(every=4, period=IntervalSchedule.SECONDS)
+            task = PeriodicTask.objects.create(
+                interval=schedule,
+                name='get_stock_price_'+arg1[0],
+                task='stock.tasks.get_live_price',  # Update the path to your dynamic_task function
+                args=json.dumps([arg1[0],"1"])
             )
 
 
@@ -108,49 +211,34 @@ class StockPriceConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
         query_params = parse_qs(self.scope["query_string"].decode())
-        # print(query_params)
-
         symbol = query_params['symbol']
-        # print(symbol)
-
-        params = {
-            'symbol':symbol,
-            'name': self.room_group_name
-        }
-        # print([symbol])
+        self.symbol = symbol[0]
         await self.addToCeleryBeat(symbol)
-        # task1.delay(symbol, self.room_group_name)
-        # await self.update_task_schedule(symbol[0], self.room_group_name)
-        
-        # json_params = json.dumps(params)
-
-        # task1.apply_async(args=[json_params], countdown=3)
-
         await self.accept()
 
-    # async def update_task_schedule(self, arg1, arg2):
-    #     # Remove the existing schedule (if any)
-    #     print("hello")
-    #     app.conf.beat_schedule.pop('get_stock_price', None)
-    #     print("hello")
-    #     # Add the updated schedule
-    #     current_app.conf.beat_schedule['get_stock_price'] = {
-    #         'task': 'stock.tasks.task1',
-    #         'schedule': 3.0,  # Run every 3 seconds
-    #         'args': (arg1, arg2,),  # Pass your updated arguments here
-    #     }
-    #     print(app.conf.beat_schedule)
-
+    @sync_to_async
+    def decrement_task_count(self):
+        task = PeriodicTask.objects.get(name='get_stock_price_' + self.symbol)
+        if task:
+            
+            arg = json.loads(task.args)
+            count = int(arg[1])
+            count -= 1
+            if count <= 0:
+                task.delete()
+            else:
+                task.args = json.dumps([arg[0],str(count)])
+                task.save()
 
     async def disconnect(self, close_code):
+        await self.decrement_task_count()
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
         await self.close()
-
+                 
     async def send_data(self, event):
         data = event['context']
-        # print(data)
         await self.send(json.dumps(data))
     
