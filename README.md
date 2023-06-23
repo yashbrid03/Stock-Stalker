@@ -16,6 +16,7 @@ This application visualize the stock performance and stats and also predict stoc
 - If one periodic task is idle then it is deleted automatically or else if it has more than one consumer it works as usual.
 - For each individual stock there is different websocket for getting live price
 - Gives Analysis of Individual Stock
+- Skeleton Loading
 
 ## Architecture
 
