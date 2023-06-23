@@ -6,9 +6,16 @@ This application visualize the stock performance and stats and also predict stoc
 
 ![image](https://github.com/yashbrid03/Stock-Stalker/assets/65955929/052e423b-7029-4756-8809-74e3d46b644e)
 
-![image](https://github.com/yashbrid03/Stock-Stalker/assets/65955929/ef2c69a2-ccc3-46a4-941a-ab634ac5b631)
+![image](https://github.com/yashbrid03/Stock-Stalker/assets/65955929/44a3d9d7-6345-4fbb-a0d4-4ed3ba9622e6)
 
 ![image](https://github.com/yashbrid03/Stock-Stalker/assets/65955929/0e444c0e-34b2-4125-9d12-d253b20b649d)
+
+## Feature
+
+- Live broadcasting of realtime data
+- If one periodic task is idle then it is deleted automatically or else if it has more than one consumer it works as usual.
+- For each individual stock there is different websocket for getting live price
+- Gives Analysis of Individual Stock
 
 ## Architecture
 
@@ -35,13 +42,13 @@ This application visualize the stock performance and stats and also predict stoc
   - Search functionality to search individual stocks
 - Individual Page
   - On individual page you can see the basic info of the stocks (like market cap, volume, P.E. ratio etc)
+  - Realtime Price on individual stock page
   - Along with that you can see the Stock Analysis (for eg its Trend, EMA, SMA, MA, etc.)
 
 ## Remaining Tasks
 
 - Creating seperate page for Top losers and top gainers
-- Analysis Part is remaining (40%)
-- Realtime Price on individual stock page (celery task is created, only web scraping logic is remaining)
+- Analysis Part is remaining (Individual page) (40%)
 - Implementation of ML model to predict stock price
 
 ## Limitations
